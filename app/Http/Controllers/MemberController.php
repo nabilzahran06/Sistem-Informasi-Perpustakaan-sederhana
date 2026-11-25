@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class MemberController
+class MemberController 
 {
     public function index()
     {
         return view('members.index');
     }
+
+    public function show($id) 
+    { 
+        return view('members.index'); 
+    } 
 }
