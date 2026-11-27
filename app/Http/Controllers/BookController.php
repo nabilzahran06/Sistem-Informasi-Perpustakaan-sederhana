@@ -13,7 +13,7 @@ class BookController
         return view('books.index',compact('books'));
     }
 
-    public function show($id) 
+    public function show( int $id) 
     { 
         $book = Book::findOrFail($id);
         return view('books.show', compact('book'));
@@ -27,12 +27,14 @@ class BookController
     
     public function store(Request $request)
     {
-    Book::create([
-        'title' => $request->title,
-        'author' => $request->author,
-        'year' => $request->year,
-        'stock' => $request->stock,
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'author' => 'required|string|max:255',
+        'year' => 'required|integer|min:1000|max:9999',
+        'stock' => 'required|integer|min:0',
     ]);
+
+    Book::create($validated);
 
     return redirect()->route('books.index');
     }
@@ -40,6 +42,20 @@ class BookController
     public function edit(Book $book)
     {
     return view('books.edit', compact('book'));
+    }
+
+    public function update(Request $request, Book $book)
+    {
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'author' => 'required|string|max:255',
+        'year' => 'required|integer|min:1000|max:9999',
+        'stock' => 'required|integer|min:0',
+    ]);
+
+    $book->update($validated);
+
+    return redirect()->route('books.index');
     }
 
     public function destroy(Book $book)
